@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 vector<vector<int>> graph;
-vector<int> color, Indegree;
+vector<int> color, dis;
 
 int main()
 {
@@ -9,34 +9,33 @@ int main()
     cin >> n >> e;
     graph.assign(n + 1, vector<int>());
     color.assign(n + 1, 0);
-    Indegree.assign(n + 1, 0);
-
     for (int i = 0; i < e; i++)
     {
         int u, v;
         cin >> u >> v;
         graph[u].push_back(v);
-        Indegree[v]++;
+        graph[v].push_back(u);
     }
+    dis.assign(n + 1, 1e8);
     queue<int> q;
-    for (int i = 1; i <= n; i++)
-    {
-        if (Indegree[i] == 0)
-            q.push(i);
-    }
+    dis[1] = 0;
+    q.push(1);
+    vector<int> par(n + 1, -1);
     while (!q.empty())
     {
         int root = q.front();
-        cout << root << " ";
         q.pop();
         for (auto it : graph[root])
         {
-            Indegree[it]--;
-            if (Indegree[it] == 0)
+            if (dis[root] + 1 < dis[it])
             {
+                dis[it] = dis[root] + 1;
                 q.push(it);
+                par[it] = root;
             }
         }
     }
-    cout << endl;
+    cout << dis[n] << endl;
+
+    return 0;
 }

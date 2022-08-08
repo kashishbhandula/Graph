@@ -10,7 +10,7 @@ bool Dfs(int root, int p = 0)
     color[root] = 1;
     for (auto it : graph[root])
     {
-        if (color[it] != 2)
+        if (color[it] != 2 && it != p)
         {
             if (Dfs(it, root))
                 return true;
