@@ -20,17 +20,14 @@ int main()
         graph[u].push_back({v, wt});
         graph[v].push_back({u, wt});
     }
-    for (int i = 0; i < n - 1; i++)
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    dis[1] = 0;
+    pq.push({0, 1});
+    while (!pq.empty())
     {
-        int mn = 1e8, root = -1;
-        for (int j = 1; j <= n; j++)
-        {
-            if (color[j] == 0 && dis[j] < mn)
-            {
-                mn = dis[j];
-                root = j;
-            }
-        }
+        int root = pq.top().second;
+        pq.pop();
+
         color[root] = 1;
         for (auto it : graph[root])
         {
@@ -38,6 +35,7 @@ int main()
             {
                 par[it.first] = root;
                 dis[it.first] = it.second;
+                pq.push({dis[it.first], it.first});
             }
         }
     }
