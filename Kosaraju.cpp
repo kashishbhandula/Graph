@@ -62,3 +62,85 @@ int main()
         }
     }
 }
+
+
+
+///////////////////////////////////////////
+
+
+
+class Solution {
+public:
+    int timer = 0;
+
+    vector<int> disc, low;
+    vector<bool> inStack;
+    stack<int> st;
+
+    vector<vector<int>> scc;
+
+    void dfs(int u, vector<vector<int>>& adj) {
+
+        // 1. Assign discovery time
+        disc[u] = low[u] = timer++;
+
+        // 2. Push node into stack
+        st.push(u);
+        inStack[u] = true;
+
+        // 3. Explore neighbours
+        for (int v : adj[u]) {
+
+            // Case 1: Neighbour not visited
+            if (disc[v] == -1) {
+
+                dfs(v, adj);
+
+                low[u] = min(low[u], low[v]);
+            }
+
+            // Case 2: Neighbour is still in stack
+            else if (inStack[v]) {
+
+                low[u] = min(low[u], disc[v]);
+            }
+        }
+
+        // 4. Found root of an SCC
+        if (low[u] == disc[u]) {
+
+            vector<int> component;
+
+            while (true) {
+
+                int node = st.top();
+                st.pop();
+
+                inStack[node] = false;
+
+                component.push_back(node);
+
+                if (node == u)
+                    break;
+            }
+
+            scc.push_back(component);
+        }
+    }
+
+    vector<vector<int>> tarjans(int n, vector<vector<int>>& adj) {
+
+        disc.assign(n, -1);
+        low.assign(n, 0);
+        inStack.assign(n, false);
+
+        for (int i = 0; i < n; i++) {
+
+            if (disc[i] == -1) {
+                dfs(i, adj);
+            }
+        }
+
+        return scc;
+    }
+};
