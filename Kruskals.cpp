@@ -14,6 +14,7 @@ void Union(int u, int v)
 {
     u = find(u);
     v = find(v);
+    if(u == v) return;
     if (Rank[u] < Rank[v])
     {
         par[u] = v;
